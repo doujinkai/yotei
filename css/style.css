@@ -1,10 +1,17 @@
-/* ==========================================
-   予定ボード
-   style.css
-   Version 0.2.0
-========================================== */
+/*
+================================================
 
-/* ---------- 共通 ---------- */
+予定ボード
+
+File : style.css
+Version : 0.3.1
+
+================================================
+*/
+
+/* ===========================
+   共通
+=========================== */
 
 *{
     margin:0;
@@ -24,8 +31,9 @@ body{
 
 }
 
-
-/* ---------- Header ---------- */
+/* ===========================
+   Header
+=========================== */
 
 .header{
 
@@ -39,19 +47,15 @@ body{
 
     background:#ffffff;
 
-    border-bottom:1px solid #dcdcdc;
+    border-bottom:1px solid #d8d8d8;
 
 }
-
 
 .header-left h1{
 
     font-size:30px;
 
-    font-weight:bold;
-
 }
-
 
 .header-left p{
 
@@ -61,19 +65,15 @@ body{
 
 }
 
-
 .header-right{
 
     display:flex;
 
+    gap:10px;
+
     align-items:center;
 
-    gap:12px;
-
 }
-
-
-/* ---------- ボタン ---------- */
 
 button{
 
@@ -81,13 +81,11 @@ button{
 
     border:1px solid #cfcfcf;
 
-    background:white;
+    background:#ffffff;
 
     cursor:pointer;
 
-    border-radius:6px;
-
-    font-size:15px;
+    border-radius:5px;
 
     transition:.2s;
 
@@ -99,23 +97,21 @@ button:hover{
 
 }
 
-
-/* ---------- 年月 ---------- */
-
 #currentMonth{
 
     font-size:22px;
 
     font-weight:bold;
 
-    min-width:150px;
+    width:160px;
 
     text-align:center;
 
 }
 
-
-/* ---------- メイン ---------- */
+/* ===========================
+   Main
+=========================== */
 
 main{
 
@@ -123,25 +119,143 @@ main{
 
 }
 
-
-/* ---------- 予定表 ---------- */
-
 #scheduleBoard{
 
-    background:white;
+    background:#ffffff;
 
     border:1px solid #d9d9d9;
 
-    border-radius:8px;
-
-    min-height:700px;
-
     overflow:auto;
+
+    height:calc(100vh - 120px);
 
 }
 
+/* ===========================
+   Schedule Table
+=========================== */
 
-/* ---------- スクロール ---------- */
+.schedule-table{
+
+    border-collapse:collapse;
+
+    table-layout:fixed;
+
+    width:max-content;
+
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.schedule-table th{
+
+    background:#f2f2f2;
+
+    border:1px solid #d9d9d9;
+
+    height:40px;
+
+    min-width:100px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+
+    font-weight:bold;
+
+}
+
+/* ===========================
+   Cell
+=========================== */
+
+.schedule-table td{
+
+    border:1px solid #e0e0e0;
+
+    width:100px;
+
+    height:40px;
+
+    padding:4px;
+
+    overflow:hidden;
+
+    white-space:nowrap;
+
+    text-overflow:ellipsis;
+
+    font-size:14px;
+
+}
+
+/* ===========================
+   左列固定
+=========================== */
+
+.schedule-table th:first-child,
+
+.schedule-table td:first-child{
+
+    position:sticky;
+
+    left:0;
+
+    width:220px;
+
+    min-width:220px;
+
+    background:#ffffff;
+
+    z-index:15;
+
+    font-weight:bold;
+
+}
+
+/* 左上セル */
+
+.schedule-table th:first-child{
+
+    z-index:30;
+
+    background:#ececec;
+
+}
+
+/* ===========================
+   部署
+=========================== */
+
+.department-row td{
+
+    background:#ececec !important;
+
+    font-weight:bold;
+
+    color:#333;
+
+}
+
+/* ===========================
+   Hover
+=========================== */
+
+.schedule-table td:hover{
+
+    background:#fffbe8;
+
+    cursor:pointer;
+
+}
+
+/* ===========================
+   Scrollbar
+=========================== */
 
 ::-webkit-scrollbar{
 
@@ -154,8 +268,6 @@ main{
 ::-webkit-scrollbar-thumb{
 
     background:#bdbdbd;
-
-    border-radius:5px;
 
 }
 
