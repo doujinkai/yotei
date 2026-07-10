@@ -4,7 +4,7 @@
 予定ボード
 
 File : app.js
-Version : 1.1.0
+Version : 1.2.0
 
 ============================================
 */
@@ -13,13 +13,28 @@ Version : 1.1.0
 "use strict";
 
 
-window.addEventListener("DOMContentLoaded", function(){
 
+window.addEventListener("DOMContentLoaded", function(){
 
     createSchedule();
 
-
 });
+
+
+
+
+
+/*
+====================================
+保存データ
+====================================
+*/
+
+
+let scheduleData = loadSchedule();
+
+
+
 
 
 
@@ -35,6 +50,9 @@ function createSchedule(){
 
     const board =
         document.getElementById("scheduleBoard");
+
+
+    board.innerHTML = "";
 
 
     const table =
@@ -64,7 +82,7 @@ function createSchedule(){
 
 /*
 ====================================
-ヘッダー
+日付ヘッダー
 ====================================
 */
 
@@ -105,7 +123,6 @@ function createHeader(table){
     }
 
 
-
     table.appendChild(row);
 
 
@@ -115,14 +132,16 @@ function createHeader(table){
 
 
 
+
 /*
 ====================================
-職員・セル作成
+職員表示
 ====================================
 */
 
 
 function createStaff(table){
+
 
 
     const staffList = [
@@ -133,20 +152,24 @@ function createStaff(table){
             name:"佐藤"
         },
 
+
         {
             department:"事務",
             name:"鈴木"
         },
+
 
         {
             department:"介護",
             name:"田中"
         },
 
+
         {
             department:"介護",
             name:"山田"
         },
+
 
         {
             department:"看護",
@@ -178,7 +201,6 @@ function createStaff(table){
                 document.createElement("tr");
 
 
-
             const deptCell =
                 document.createElement("td");
 
@@ -199,7 +221,9 @@ function createStaff(table){
             table.appendChild(deptRow);
 
 
+
         }
+
 
 
 
@@ -234,12 +258,38 @@ function createStaff(table){
 
 
 
+            const saved =
+                findSchedule(
+                    staff.name,
+                    day
+                );
+
+
+
+            if(saved){
+
+
+                cell.textContent =
+                    saved.text;
+
+
+            }
+
+
+
+
+
+
             cell.addEventListener(
                 "click",
                 function(){
 
 
-                    inputSchedule(cell);
+                    inputSchedule(
+                        cell,
+                        staff.name,
+                        day
+                    );
 
 
                 }
@@ -250,8 +300,8 @@ function createStaff(table){
             row.appendChild(cell);
 
 
-        }
 
+        }
 
 
 
@@ -262,8 +312,9 @@ function createStaff(table){
     });
 
 
-
 }
+
+
 
 
 
@@ -276,12 +327,22 @@ function createStaff(table){
 */
 
 
-function inputSchedule(cell){
+function inputSchedule(cell, staff, day){
+
+
+
+    const current =
+        findSchedule(
+            staff,
+            day
+        );
+
 
 
     const text =
         prompt(
-            "予定を入力してください"
+            "予定を入力してください",
+            current ? current.text : ""
         );
 
 
@@ -294,8 +355,208 @@ function inputSchedule(cell){
 
 
 
+
+    if(text === ""){
+
+
+        removeSchedule(
+            staff,
+            day
+        );
+
+
+        cell.textContent = "";
+
+
+        return;
+
+
+    }
+
+
+
+
+    const exists =
+        findSchedule(
+            staff,
+            day
+        );
+
+
+
+    if(exists){
+
+
+        exists.text =
+            text;
+
+
+    }
+    else{
+
+
+        scheduleData.push({
+
+            staff:staff,
+
+            day:day,
+
+            text:text
+
+        });
+
+
+    }
+
+
+
+    saveSchedule();
+
+
+
     cell.textContent =
         text;
+
+
+
+}
+
+
+
+
+
+
+
+/*
+====================================
+検索
+====================================
+*/
+
+
+function findSchedule(staff, day){
+
+
+    return scheduleData.find(function(item){
+
+
+        return (
+
+            item.staff === staff
+
+            &&
+
+            item.day === day
+
+        );
+
+
+    });
+
+
+}
+
+
+
+
+
+
+
+/*
+====================================
+削除
+====================================
+*/
+
+
+function removeSchedule(staff, day){
+
+
+    scheduleData =
+        scheduleData.filter(function(item){
+
+
+            return !(
+
+                item.staff === staff
+
+                &&
+
+                item.day === day
+
+            );
+
+
+        });
+
+
+
+    saveSchedule();
+
+
+
+}
+
+
+
+
+
+
+/*
+====================================
+保存
+====================================
+*/
+
+
+function saveSchedule(){
+
+
+    localStorage.setItem(
+
+        "yoteiData",
+
+        JSON.stringify(scheduleData)
+
+    );
+
+
+}
+
+
+
+
+
+
+
+/*
+====================================
+読み込み
+====================================
+*/
+
+
+function loadSchedule(){
+
+
+    const data =
+        localStorage.getItem(
+            "yoteiData"
+        );
+
+
+
+    if(data){
+
+
+        return JSON.parse(data);
+
+
+    }
+
+
+
+    return [];
 
 
 
