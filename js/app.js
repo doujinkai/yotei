@@ -4,29 +4,82 @@
 予定ボード
 
 File : app.js
-Version : test-0.1
+Version : 0.5.0
 
 ============================================
 */
 
-
 "use strict";
 
 
+const now = new Date();
+
+
+
 window.addEventListener("DOMContentLoaded", function(){
+
+
+    showMonth();
+
+    createSchedule();
+
+
+});
+
+
+
+
+/*
+====================================
+年月表示
+====================================
+*/
+
+
+function showMonth(){
+
+
+    const month =
+        document.getElementById("currentMonth");
+
+
+    if(month){
+
+
+        month.textContent =
+            now.getFullYear()
+            +
+            "年"
+            +
+            (now.getMonth()+1)
+            +
+            "月";
+
+
+    }
+
+
+}
+
+
+
+
+/*
+====================================
+予定表作成
+====================================
+*/
+
+
+function createSchedule(){
 
 
     const board =
         document.getElementById("scheduleBoard");
 
 
-    if(!board){
 
-        console.log("scheduleBoardがありません");
-
-        return;
-
-    }
+    board.innerHTML = "";
 
 
 
@@ -34,35 +87,59 @@ window.addEventListener("DOMContentLoaded", function(){
         document.createElement("table");
 
 
+
     table.className =
         "schedule-table";
 
 
 
-    /*
-    --------------------------
-    日付ヘッダー
-    --------------------------
-    */
+    createHeader(table);
 
 
-    const header =
+
+    createBody(table);
+
+
+
+    board.appendChild(table);
+
+
+
+}
+
+
+
+
+/*
+====================================
+ヘッダー
+====================================
+*/
+
+
+function createHeader(table){
+
+
+    const row =
         document.createElement("tr");
 
 
-    const nameHeader =
+
+    const name =
         document.createElement("th");
 
 
-    nameHeader.textContent =
+
+    name.textContent =
         "職員";
 
 
-    header.appendChild(nameHeader);
+
+    row.appendChild(name);
 
 
 
-    for(let i = 1; i <= 31; i++){
+    for(let day = 1; day <= 31; day++){
 
 
         const th =
@@ -70,44 +147,90 @@ window.addEventListener("DOMContentLoaded", function(){
 
 
         th.textContent =
-            i;
+            day;
 
 
-        header.appendChild(th);
+
+        row.appendChild(th);
+
 
     }
 
 
-    table.appendChild(header);
+
+    table.appendChild(row);
+
+
+
+}
 
 
 
 
-    /*
-    --------------------------
-    職員データ
-    --------------------------
-    */
+/*
+====================================
+本体
+====================================
+*/
 
 
-    const staff = [
+function createBody(table){
 
-        "佐藤",
 
-        "鈴木",
-
-        "田中",
-
-        "山田",
-
-        "高橋"
-
-    ];
+    let department = "";
 
 
 
+    staffList.forEach(function(staff){
 
-    staff.forEach(function(name){
+
+
+        if(department !== staff.department){
+
+
+            department =
+                staff.department;
+
+
+
+            const deptRow =
+                document.createElement("tr");
+
+
+
+            deptRow.className =
+                "department-row";
+
+
+
+            const dept =
+                document.createElement("td");
+
+
+
+            dept.colSpan =
+                32;
+
+
+
+            dept.textContent =
+                "▼ "
+                +
+                department;
+
+
+
+            deptRow.appendChild(dept);
+
+
+
+            table.appendChild(deptRow);
+
+
+
+        }
+
+
 
 
 
@@ -120,8 +243,10 @@ window.addEventListener("DOMContentLoaded", function(){
             document.createElement("td");
 
 
+
         nameCell.textContent =
-            name;
+            staff.name;
+
 
 
         row.appendChild(nameCell);
@@ -129,14 +254,82 @@ window.addEventListener("DOMContentLoaded", function(){
 
 
 
-        for(let i = 1; i <= 31; i++){
+
+
+        for(let day = 1; day <= 31; day++){
+
 
 
             const cell =
                 document.createElement("td");
 
 
+
+            const date =
+                createDate(day);
+
+
+
+            const plan =
+                getSchedule(
+                    staff.name,
+                    date
+                );
+
+
+
+
+            if(plan){
+
+
+                cell.textContent =
+                    plan.title;
+
+
+
+                if(plan.detail){
+
+
+                    cell.textContent +=
+                        " ◢";
+
+
+                }
+
+
+            }
+
+
+
+
+
+            cell.addEventListener(
+                "click",
+                function(){
+
+
+                    openModal(
+
+                        staff.name,
+
+                        date,
+
+                        plan ? plan.title : "",
+
+                        plan ? plan.detail : ""
+
+                    );
+
+
+                }
+            );
+
+
+
+
             row.appendChild(cell);
+
+
 
         }
 
@@ -145,16 +338,96 @@ window.addEventListener("DOMContentLoaded", function(){
         table.appendChild(row);
 
 
+
     });
 
 
 
-
-    board.appendChild(table);
-
+}
 
 
-    console.log("予定表作成完了");
 
 
-});
+
+
+/*
+====================================
+日付作成
+====================================
+*/
+
+
+function createDate(day){
+
+
+    const year =
+        now.getFullYear();
+
+
+
+    const month =
+        String(
+            now.getMonth()+1
+        )
+        .padStart(2,"0");
+
+
+
+    const date =
+        String(day)
+        .padStart(2,"0");
+
+
+
+    return (
+        year
+        +
+        "-"
+        +
+        month
+        +
+        "-"
+        +
+        date
+    );
+
+
+}
+
+
+
+
+
+
+/*
+====================================
+予定検索
+====================================
+*/
+
+
+function getSchedule(staff,date){
+
+
+
+    return scheduleData.find(function(item){
+
+
+
+        return (
+
+            item.staff === staff
+
+            &&
+
+            item.date === date
+
+        );
+
+
+
+    });
+
+
+
+}
