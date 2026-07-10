@@ -1,97 +1,88 @@
 /*
-================================================
+============================================
 
 予定ボード
 
 File : app.js
 Version : 0.4.1
 
-================================================
+============================================
 */
 
 "use strict";
 
 
-/*=========================================
-  現在年月
-=========================================*/
-
-const currentDate = new Date();
+const now = new Date();
 
 
 
-/*=========================================
-  職員データ
+window.addEventListener("DOMContentLoaded", function(){
 
-後でスプレッドシートから取得予定
-=========================================*/
+    showMonth();
 
-const staffList = [
-
-    { department: "事務", name: "佐藤" },
-    { department: "事務", name: "鈴木" },
-
-    { department: "介護", name: "田中" },
-    { department: "介護", name: "山田" },
-
-    { department: "看護", name: "高橋" }
-
-];
-
-
-
-/*=========================================
- 初期化
-=========================================*/
-
-window.addEventListener("DOMContentLoaded", () => {
-
-    updateMonth();
-
-    createBoard();
+    createSchedule();
 
 });
 
 
 
-/*=========================================
- 年月表示
-=========================================*/
+/*
+年月表示
+*/
 
-function updateMonth(){
+function showMonth(){
 
-    document.getElementById("currentMonth").textContent =
-        `${currentDate.getFullYear()}年${currentDate.getMonth()+1}月`;
+    const month =
+        document.getElementById("currentMonth");
+
+
+    if(month){
+
+        month.textContent =
+            now.getFullYear() +
+            "年" +
+            (now.getMonth()+1) +
+            "月";
+
+    }
 
 }
 
 
 
-/*=========================================
- 予定表作成
-=========================================*/
+/*
+予定表作成
+*/
 
-function createBoard(){
+function createSchedule(){
 
     const board =
         document.getElementById("scheduleBoard");
 
 
-    board.innerHTML="";
+    if(!board){
+
+        console.error(
+            "scheduleBoardがありません"
+        );
+
+        return;
+
+    }
 
 
     const table =
         document.createElement("table");
 
 
-    table.className="schedule-table";
+    table.className =
+        "schedule-table";
 
 
 
     createHeader(table);
 
-
-    createBody(table);
+    createRows(table);
 
 
 
@@ -101,95 +92,80 @@ function createBoard(){
 
 
 
-/*=========================================
- ヘッダー作成
-=========================================*/
+/*
+日付ヘッダー
+*/
 
 function createHeader(table){
 
 
-    const thead =
-        document.createElement("thead");
-
-
-    const row =
+    const tr =
         document.createElement("tr");
 
 
-    const nameHeader =
+    const name =
         document.createElement("th");
 
 
-    nameHeader.textContent="職員";
+    name.textContent =
+        "職員";
 
 
-    row.appendChild(nameHeader);
+    tr.appendChild(name);
 
 
 
     const days =
-        getDaysInMonth();
+        getDays();
 
 
 
-    for(let day=1; day<=days; day++){
+    for(let i=1;i<=days;i++){
 
 
         const th =
             document.createElement("th");
 
 
-        th.textContent=day;
+        th.textContent =
+            i;
 
 
-        row.appendChild(th);
+        tr.appendChild(th);
 
     }
 
 
-
-    thead.appendChild(row);
-
-
-    table.appendChild(thead);
+    table.appendChild(tr);
 
 }
 
 
 
-/*=========================================
- 本体作成
-=========================================*/
+/*
+職員行
+*/
 
-function createBody(table){
-
-
-    const tbody =
-        document.createElement("tbody");
+function createRows(table){
 
 
+    let beforeDepartment = "";
 
-    let department="";
+
+    staffList.forEach(function(staff){
 
 
 
-    staffList.forEach(staff=>{
+        if(beforeDepartment !== staff.department){
 
 
-        if(department !== staff.department){
-
-
-            department =
+            beforeDepartment =
                 staff.department;
 
 
 
-            const deptRow =
+            const dept =
                 document.createElement("tr");
-
-
-            deptRow.className="department-row";
-
 
 
             const td =
@@ -197,24 +173,23 @@ function createBody(table){
 
 
             td.colSpan =
-                getDaysInMonth()+1;
+                getDays()+1;
 
 
             td.textContent =
-                "▼ " + department;
+                "▼ " + staff.department;
 
 
+            dept.appendChild(td);
 
-            deptRow.appendChild(td);
 
-
-            tbody.appendChild(deptRow);
+            table.appendChild(dept);
 
         }
 
 
 
-        const row =
+        const tr =
             document.createElement("tr");
 
 
@@ -227,43 +202,48 @@ function createBody(table){
             staff.name;
 
 
-        row.appendChild(name);
+        tr.appendChild(name);
 
 
 
-        for(let day=1; day<=getDaysInMonth(); day++){
+        for(let day=1;day<=getDays();day++){
 
 
-            const cell =
+            const td =
                 document.createElement("td");
 
 
 
             const date =
-                createDateString(day);
+                makeDate(day);
 
 
 
-            const schedule =
-                findSchedule(
-                    date,
-                    staff.name
-                );
+            const plan =
+                scheduleData.find(function(item){
+
+
+                    return (
+                        item.date === date &&
+                        item.staff === staff.name
+                    );
+
+
+                });
 
 
 
-            if(schedule){
+            if(plan){
 
 
-                cell.textContent =
-                    schedule.title;
+                td.textContent =
+                    plan.title;
 
 
+                if(plan.detail){
 
-                if(schedule.detail){
-
-
-                    cell.textContent += " ◢";
+                    td.textContent +=
+                        " ◢";
 
                 }
 
@@ -271,34 +251,31 @@ function createBody(table){
 
 
 
-            row.appendChild(cell);
+            tr.appendChild(td);
 
         }
 
 
 
-        tbody.appendChild(row);
+        table.appendChild(tr);
 
 
     });
 
 
-
-    table.appendChild(tbody);
-
 }
 
 
 
-/*=========================================
- 日数取得
-=========================================*/
+/*
+月の日数
+*/
 
-function getDaysInMonth(){
+function getDays(){
 
     return new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth()+1,
+        now.getFullYear(),
+        now.getMonth()+1,
         0
     ).getDate();
 
@@ -306,21 +283,20 @@ function getDaysInMonth(){
 
 
 
-/*=========================================
- 日付形式作成
-=========================================*/
+/*
+日付作成
+*/
 
-function createDateString(day){
+function makeDate(day){
 
 
     const y =
-        currentDate.getFullYear();
+        now.getFullYear();
 
 
     const m =
-        String(
-            currentDate.getMonth()+1
-        ).padStart(2,"0");
+        String(now.getMonth()+1)
+        .padStart(2,"0");
 
 
     const d =
@@ -329,29 +305,6 @@ function createDateString(day){
 
 
 
-    return `${y}-${m}-${d}`;
-
-}
-
-
-
-/*=========================================
- 予定検索
-=========================================*/
-
-function findSchedule(date,staff){
-
-
-    return scheduleData.find(item=>{
-
-
-        return (
-            item.date === date &&
-            item.staff === staff
-        );
-
-
-    });
-
+    return y+"-"+m+"-"+d;
 
 }
