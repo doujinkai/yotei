@@ -4,7 +4,7 @@
 予定ボード
 
 File : app.js
-Version : 1.2.0
+Version : 1.3.0
 
 ============================================
 */
@@ -32,6 +32,7 @@ window.addEventListener("DOMContentLoaded", function(){
 
 
 let scheduleData = loadSchedule();
+
 
 
 
@@ -75,6 +76,8 @@ function createSchedule(){
 
 
 }
+
+
 
 
 
@@ -127,6 +130,7 @@ function createHeader(table){
 
 
 }
+
 
 
 
@@ -270,7 +274,7 @@ function createStaff(table){
 
 
                 cell.textContent =
-                    saved.text;
+                    saved.title;
 
 
             }
@@ -339,15 +343,15 @@ function inputSchedule(cell, staff, day){
 
 
 
-    const text =
+    const title =
         prompt(
-            "予定を入力してください",
-            current ? current.text : ""
+            "予定名を入力してください",
+            current ? current.title : ""
         );
 
 
 
-    if(text === null){
+    if(title === null){
 
         return;
 
@@ -356,7 +360,8 @@ function inputSchedule(cell, staff, day){
 
 
 
-    if(text === ""){
+
+    if(title === ""){
 
 
         removeSchedule(
@@ -376,6 +381,17 @@ function inputSchedule(cell, staff, day){
 
 
 
+
+    const detail =
+        prompt(
+            "詳細を入力してください",
+            current ? current.detail : ""
+        );
+
+
+
+
+
     const exists =
         findSchedule(
             staff,
@@ -387,8 +403,13 @@ function inputSchedule(cell, staff, day){
     if(exists){
 
 
-        exists.text =
-            text;
+        exists.title =
+            title;
+
+
+        exists.detail =
+            detail;
+
 
 
     }
@@ -401,7 +422,10 @@ function inputSchedule(cell, staff, day){
 
             day:day,
 
-            text:text
+            title:title,
+
+            detail:detail
+
 
         });
 
@@ -415,7 +439,7 @@ function inputSchedule(cell, staff, day){
 
 
     cell.textContent =
-        text;
+        title;
 
 
 
@@ -549,7 +573,44 @@ function loadSchedule(){
     if(data){
 
 
-        return JSON.parse(data);
+        let result =
+            JSON.parse(data);
+
+
+
+        result =
+            result.map(function(item){
+
+
+                if(item.text){
+
+
+                    return {
+
+                        staff:item.staff,
+
+                        day:item.day,
+
+                        title:item.text,
+
+                        detail:""
+
+                    };
+
+
+                }
+
+
+
+                return item;
+
+
+
+            });
+
+
+
+        return result;
 
 
     }
