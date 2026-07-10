@@ -1,83 +1,108 @@
+<!--
+============================================
+
+予定ボード
+
+File : index.html
+Version : 0.4.1
+
+============================================
+-->
+
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>予定ボード</title>
 
+
     <!-- CSS -->
+
     <link rel="stylesheet" href="css/style.css">
+
 </head>
+
+
 
 <body>
 
-    <!-- ===========================
-         Header
-    ============================ -->
 
-    <header class="header">
-
-        <div class="header-left">
-            <h1>予定ボード</h1>
-            <p>ふれあい太田</p>
-        </div>
-
-        <div class="header-right">
-
-            <button id="prevMonth">
-                ＜ 前月
-            </button>
-
-            <span id="currentMonth">
-                2026年7月
-            </span>
-
-            <button id="today">
-                今日
-            </button>
-
-            <button id="nextMonth">
-                次月 ＞
-            </button>
-
-        </div>
-
-    </header>
+<header class="header">
 
 
-    <!-- ===========================
-         Main
-    ============================ -->
+    <div class="header-left">
 
-    <main>
+        <h1>
+            予定ボード
+        </h1>
 
-        <!-- 勤務表表示エリア -->
-        <section id="scheduleBoard">
-
-            <!-- JavaScriptで予定表を生成 -->
-
-        </section>
-
-    </main>
-
-
-    <!-- ===========================
-         編集モーダル（後で作成）
-    ============================ -->
-
-    <div id="modalArea">
+        <p>
+            ふれあい太田
+        </p>
 
     </div>
 
 
-    <!-- JavaScript -->
+
+    <div class="header-right">
 
 
-    <script src="js/data.js"></script>
-    <script src="js/app.js"></script>
+        <button>
+            ＜ 前月
+        </button>
+
+
+        <span id="currentMonth">
+            2026年7月
+        </span>
+
+
+        <button>
+            今日
+        </button>
+
+
+        <button>
+            次月 ＞
+        </button>
+
+
+    </div>
+
+
+</header>
+
+
+
+
+<main>
+
+
+    <section id="scheduleBoard">
+
+        <!-- JavaScriptで表を作成 -->
+
+    </section>
+
+
+</main>
+
+
+
+
+<!-- JavaScript -->
+
+<script src="js/data.js"></script>
+
+<script src="js/app.js"></script>
+
 
 </body>
+
 
 </html>
