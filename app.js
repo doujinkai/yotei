@@ -4,7 +4,7 @@
 予定ボード
 
 File : app.js
-Version : 1.0.0
+Version : 1.1.0
 
 ============================================
 */
@@ -17,7 +17,6 @@ window.addEventListener("DOMContentLoaded", function(){
 
 
     createSchedule();
-
 
 
 });
@@ -36,7 +35,6 @@ function createSchedule(){
 
     const board =
         document.getElementById("scheduleBoard");
-
 
 
     const table =
@@ -58,15 +56,15 @@ function createSchedule(){
     board.appendChild(table);
 
 
-
 }
+
 
 
 
 
 /*
 ====================================
-日付ヘッダー
+ヘッダー
 ====================================
 */
 
@@ -78,7 +76,6 @@ function createHeader(table){
         document.createElement("tr");
 
 
-
     const name =
         document.createElement("th");
 
@@ -88,7 +85,6 @@ function createHeader(table){
 
 
     row.appendChild(name);
-
 
 
 
@@ -113,21 +109,20 @@ function createHeader(table){
     table.appendChild(row);
 
 
-
 }
+
 
 
 
 
 /*
 ====================================
-職員表示
+職員・セル作成
 ====================================
 */
 
 
 function createStaff(table){
-
 
 
     const staffList = [
@@ -138,24 +133,20 @@ function createStaff(table){
             name:"佐藤"
         },
 
-
         {
             department:"事務",
             name:"鈴木"
         },
-
 
         {
             department:"介護",
             name:"田中"
         },
 
-
         {
             department:"介護",
             name:"山田"
         },
-
 
         {
             department:"看護",
@@ -167,9 +158,7 @@ function createStaff(table){
 
 
 
-
     let beforeDepartment = "";
-
 
 
 
@@ -199,20 +188,15 @@ function createStaff(table){
                 32;
 
 
-
             deptCell.textContent =
-                "▼ "
-                +
-                staff.department;
+                "▼ " + staff.department;
 
 
 
             deptRow.appendChild(deptCell);
 
 
-
             table.appendChild(deptRow);
-
 
 
         }
@@ -230,7 +214,6 @@ function createStaff(table){
             document.createElement("td");
 
 
-
         nameCell.textContent =
             staff.name;
 
@@ -241,15 +224,30 @@ function createStaff(table){
 
 
 
+
         for(let day = 1; day <= 31; day++){
+
 
 
             const cell =
                 document.createElement("td");
 
 
-            row.appendChild(cell);
 
+            cell.addEventListener(
+                "click",
+                function(){
+
+
+                    inputSchedule(cell);
+
+
+                }
+            );
+
+
+
+            row.appendChild(cell);
 
 
         }
@@ -262,6 +260,42 @@ function createStaff(table){
 
 
     });
+
+
+
+}
+
+
+
+
+
+/*
+====================================
+予定入力
+====================================
+*/
+
+
+function inputSchedule(cell){
+
+
+    const text =
+        prompt(
+            "予定を入力してください"
+        );
+
+
+
+    if(text === null){
+
+        return;
+
+    }
+
+
+
+    cell.textContent =
+        text;
 
 
 
