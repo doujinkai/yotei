@@ -4,57 +4,17 @@
 予定ボード
 
 File : app.js
-Version : 0.4.1
+Version : test-0.1
 
 ============================================
 */
 
+
 "use strict";
-
-
-const now = new Date();
-
 
 
 window.addEventListener("DOMContentLoaded", function(){
 
-    showMonth();
-
-    createSchedule();
-
-});
-
-
-
-/*
-年月表示
-*/
-
-function showMonth(){
-
-    const month =
-        document.getElementById("currentMonth");
-
-
-    if(month){
-
-        month.textContent =
-            now.getFullYear() +
-            "年" +
-            (now.getMonth()+1) +
-            "月";
-
-    }
-
-}
-
-
-
-/*
-予定表作成
-*/
-
-function createSchedule(){
 
     const board =
         document.getElementById("scheduleBoard");
@@ -62,13 +22,12 @@ function createSchedule(){
 
     if(!board){
 
-        console.error(
-            "scheduleBoardがありません"
-        );
+        console.log("scheduleBoardがありません");
 
         return;
 
     }
+
 
 
     const table =
@@ -80,47 +39,30 @@ function createSchedule(){
 
 
 
-    createHeader(table);
-
-    createRows(table);
-
-
-
-    board.appendChild(table);
-
-}
+    /*
+    --------------------------
+    日付ヘッダー
+    --------------------------
+    */
 
 
-
-/*
-日付ヘッダー
-*/
-
-function createHeader(table){
-
-
-    const tr =
+    const header =
         document.createElement("tr");
 
 
-    const name =
+    const nameHeader =
         document.createElement("th");
 
 
-    name.textContent =
+    nameHeader.textContent =
         "職員";
 
 
-    tr.appendChild(name);
+    header.appendChild(nameHeader);
 
 
 
-    const days =
-        getDays();
-
-
-
-    for(let i=1;i<=days;i++){
+    for(let i = 1; i <= 31; i++){
 
 
         const th =
@@ -131,180 +73,88 @@ function createHeader(table){
             i;
 
 
-        tr.appendChild(th);
+        header.appendChild(th);
 
     }
 
 
-    table.appendChild(tr);
-
-}
+    table.appendChild(header);
 
 
 
-/*
-職員行
-*/
 
-function createRows(table){
-
-
-    let beforeDepartment = "";
+    /*
+    --------------------------
+    職員データ
+    --------------------------
+    */
 
 
-    staffList.forEach(function(staff){
+    const staff = [
 
+        "佐藤",
 
+        "鈴木",
 
-        if(beforeDepartment !== staff.department){
+        "田中",
 
+        "山田",
 
-            beforeDepartment =
-                staff.department;
+        "高橋"
 
-
-
-            const dept =
-                document.createElement("tr");
-
-
-            const td =
-                document.createElement("td");
-
-
-            td.colSpan =
-                getDays()+1;
-
-
-            td.textContent =
-                "▼ " + staff.department;
-
-
-            dept.appendChild(td);
-
-
-            table.appendChild(dept);
-
-        }
+    ];
 
 
 
-        const tr =
+
+    staff.forEach(function(name){
+
+
+
+        const row =
             document.createElement("tr");
 
 
 
-        const name =
+        const nameCell =
             document.createElement("td");
 
 
-        name.textContent =
-            staff.name;
+        nameCell.textContent =
+            name;
 
 
-        tr.appendChild(name);
+        row.appendChild(nameCell);
 
 
 
-        for(let day=1;day<=getDays();day++){
+
+        for(let i = 1; i <= 31; i++){
 
 
-            const td =
+            const cell =
                 document.createElement("td");
 
 
-
-            const date =
-                makeDate(day);
-
-
-
-            const plan =
-                scheduleData.find(function(item){
-
-
-                    return (
-                        item.date === date &&
-                        item.staff === staff.name
-                    );
-
-
-                });
-
-
-
-            if(plan){
-
-
-                td.textContent =
-                    plan.title;
-
-
-                if(plan.detail){
-
-                    td.textContent +=
-                        " ◢";
-
-                }
-
-            }
-
-
-
-            tr.appendChild(td);
+            row.appendChild(cell);
 
         }
 
 
 
-        table.appendChild(tr);
+        table.appendChild(row);
 
 
     });
 
 
-}
+
+
+    board.appendChild(table);
 
 
 
-/*
-月の日数
-*/
-
-function getDays(){
-
-    return new Date(
-        now.getFullYear(),
-        now.getMonth()+1,
-        0
-    ).getDate();
-
-}
+    console.log("予定表作成完了");
 
 
-
-/*
-日付作成
-*/
-
-function makeDate(day){
-
-
-    const y =
-        now.getFullYear();
-
-
-    const m =
-        String(now.getMonth()+1)
-        .padStart(2,"0");
-
-
-    const d =
-        String(day)
-        .padStart(2,"0");
-
-
-
-    return y+"-"+m+"-"+d;
-
-}
+});
