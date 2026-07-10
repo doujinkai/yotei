@@ -1,1 +1,166 @@
+/* ==========================================
+   予定ボード
+   style.css
+   Version 0.2.0
+========================================== */
 
+/* ---------- 共通 ---------- */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:
+    "Yu Gothic UI",
+    "Meiryo",
+    sans-serif;
+
+    background:#f5f6f8;
+    color:#333;
+
+}
+
+
+/* ---------- Header ---------- */
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 30px;
+
+    background:#ffffff;
+
+    border-bottom:1px solid #dcdcdc;
+
+}
+
+
+.header-left h1{
+
+    font-size:30px;
+
+    font-weight:bold;
+
+}
+
+
+.header-left p{
+
+    color:#666;
+
+    margin-top:4px;
+
+}
+
+
+.header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+/* ---------- ボタン ---------- */
+
+button{
+
+    padding:8px 18px;
+
+    border:1px solid #cfcfcf;
+
+    background:white;
+
+    cursor:pointer;
+
+    border-radius:6px;
+
+    font-size:15px;
+
+    transition:.2s;
+
+}
+
+button:hover{
+
+    background:#eeeeee;
+
+}
+
+
+/* ---------- 年月 ---------- */
+
+#currentMonth{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    min-width:150px;
+
+    text-align:center;
+
+}
+
+
+/* ---------- メイン ---------- */
+
+main{
+
+    padding:20px;
+
+}
+
+
+/* ---------- 予定表 ---------- */
+
+#scheduleBoard{
+
+    background:white;
+
+    border:1px solid #d9d9d9;
+
+    border-radius:8px;
+
+    min-height:700px;
+
+    overflow:auto;
+
+}
+
+
+/* ---------- スクロール ---------- */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+    height:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#bdbdbd;
+
+    border-radius:5px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#efefef;
+
+}
